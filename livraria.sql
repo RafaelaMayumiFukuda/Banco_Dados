@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 27/11/2024 às 01:45
--- Versão do servidor: 10.4.32-MariaDB
--- Versão do PHP: 8.0.30
+-- Tempo de geração: 29-Nov-2024 às 19:54
+-- Versão do servidor: 10.4.27-MariaDB
+-- versão do PHP: 8.0.25
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `categoria`
+-- Estrutura da tabela `autores`
+--
+
+CREATE TABLE `autores` (
+  `id_autor` int(5) NOT NULL,
+  `nome` varchar(100) NOT NULL,
+  `registro` varchar(50) NOT NULL,
+  `sexo` char(1) NOT NULL,
+  `pais` varchar(15) NOT NULL,
+  `dt_nascimento` date NOT NULL,
+  `id_autor_livro` int(10) NOT NULL,
+  `id_autor_editora` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura da tabela `categoria`
 --
 
 CREATE TABLE `categoria` (
@@ -36,7 +53,7 @@ CREATE TABLE `categoria` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `clientes`
+-- Estrutura da tabela `clientes`
 --
 
 CREATE TABLE `clientes` (
@@ -54,7 +71,7 @@ CREATE TABLE `clientes` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `colaboradores`
+-- Estrutura da tabela `colaboradores`
 --
 
 CREATE TABLE `colaboradores` (
@@ -75,7 +92,7 @@ CREATE TABLE `colaboradores` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `danfe`
+-- Estrutura da tabela `danfe`
 --
 
 CREATE TABLE `danfe` (
@@ -92,7 +109,7 @@ CREATE TABLE `danfe` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `editoras`
+-- Estrutura da tabela `editoras`
 --
 
 CREATE TABLE `editoras` (
@@ -112,7 +129,7 @@ CREATE TABLE `editoras` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `livros`
+-- Estrutura da tabela `livros`
 --
 
 CREATE TABLE `livros` (
@@ -135,7 +152,7 @@ CREATE TABLE `livros` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `setores`
+-- Estrutura da tabela `setores`
 --
 
 CREATE TABLE `setores` (
@@ -148,7 +165,7 @@ CREATE TABLE `setores` (
 -- --------------------------------------------------------
 
 --
--- Estrutura para tabela `vendas`
+-- Estrutura da tabela `vendas`
 --
 
 CREATE TABLE `vendas` (
@@ -167,56 +184,78 @@ CREATE TABLE `vendas` (
 --
 
 --
--- Índices de tabela `categoria`
+-- Índices para tabela `autores`
 --
-ALTER TABLE `categoria`
-  ADD PRIMARY KEY (`id_categoria`);
+ALTER TABLE `autores`
+  ADD PRIMARY KEY (`id_autor`),
+  ADD KEY `id_autor_editora` (`id_autor_editora`),
+  ADD KEY `id_autor_livro` (`id_autor_livro`);
 
 --
--- Índices de tabela `clientes`
+-- Índices para tabela `categoria`
+--
+ALTER TABLE `categoria`
+  ADD PRIMARY KEY (`id_categoria`),
+  ADD KEY `id_categoria_livro` (`id_categoria_livro`);
+
+--
+-- Índices para tabela `clientes`
 --
 ALTER TABLE `clientes`
   ADD PRIMARY KEY (`id_clietes`);
 
 --
--- Índices de tabela `colaboradores`
+-- Índices para tabela `colaboradores`
 --
 ALTER TABLE `colaboradores`
   ADD PRIMARY KEY (`id_colaboradores`);
 
 --
--- Índices de tabela `danfe`
+-- Índices para tabela `danfe`
 --
 ALTER TABLE `danfe`
-  ADD PRIMARY KEY (`id_danfe`);
+  ADD PRIMARY KEY (`id_danfe`),
+  ADD KEY `id_danfe_livro` (`id_danfe_livro`);
 
 --
--- Índices de tabela `editoras`
+-- Índices para tabela `editoras`
 --
 ALTER TABLE `editoras`
-  ADD PRIMARY KEY (`id_editora`);
+  ADD PRIMARY KEY (`id_editora`),
+  ADD KEY `id_editora_livro` (`id_editora_livro`);
 
 --
--- Índices de tabela `livros`
+-- Índices para tabela `livros`
 --
 ALTER TABLE `livros`
   ADD PRIMARY KEY (`id_livros`);
 
 --
--- Índices de tabela `setores`
+-- Índices para tabela `setores`
 --
 ALTER TABLE `setores`
-  ADD PRIMARY KEY (`id_setores`);
+  ADD PRIMARY KEY (`id_setores`),
+  ADD KEY `id_setor_colab` (`id_setor_colab`);
 
 --
--- Índices de tabela `vendas`
+-- Índices para tabela `vendas`
 --
 ALTER TABLE `vendas`
-  ADD PRIMARY KEY (`id_vendas`);
+  ADD PRIMARY KEY (`id_vendas`),
+  ADD KEY `id_venda_cliente` (`id_venda_cliente`),
+  ADD KEY `id_venda_colaborador` (`id_venda_colaborador`),
+  ADD KEY `id_venda_danfe` (`id_venda_danfe`),
+  ADD KEY `id_venda_livro` (`id_venda_livro`);
 
 --
--- AUTO_INCREMENT para tabelas despejadas
+-- AUTO_INCREMENT de tabelas despejadas
 --
+
+--
+-- AUTO_INCREMENT de tabela `autores`
+--
+ALTER TABLE `autores`
+  MODIFY `id_autor` int(5) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de tabela `categoria`
@@ -265,6 +304,50 @@ ALTER TABLE `setores`
 --
 ALTER TABLE `vendas`
   MODIFY `id_vendas` int(5) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restrições para despejos de tabelas
+--
+
+--
+-- Limitadores para a tabela `autores`
+--
+ALTER TABLE `autores`
+  ADD CONSTRAINT `autores_ibfk_1` FOREIGN KEY (`id_autor_editora`) REFERENCES `editoras` (`id_editora`),
+  ADD CONSTRAINT `autores_ibfk_2` FOREIGN KEY (`id_autor_livro`) REFERENCES `livros` (`id_livros`);
+
+--
+-- Limitadores para a tabela `categoria`
+--
+ALTER TABLE `categoria`
+  ADD CONSTRAINT `categoria_ibfk_1` FOREIGN KEY (`id_categoria_livro`) REFERENCES `livros` (`id_livros`);
+
+--
+-- Limitadores para a tabela `danfe`
+--
+ALTER TABLE `danfe`
+  ADD CONSTRAINT `danfe_ibfk_1` FOREIGN KEY (`id_danfe_livro`) REFERENCES `livros` (`id_livros`);
+
+--
+-- Limitadores para a tabela `editoras`
+--
+ALTER TABLE `editoras`
+  ADD CONSTRAINT `editoras_ibfk_1` FOREIGN KEY (`id_editora_livro`) REFERENCES `livros` (`id_livros`);
+
+--
+-- Limitadores para a tabela `setores`
+--
+ALTER TABLE `setores`
+  ADD CONSTRAINT `setores_ibfk_1` FOREIGN KEY (`id_setor_colab`) REFERENCES `colaboradores` (`id_colaboradores`);
+
+--
+-- Limitadores para a tabela `vendas`
+--
+ALTER TABLE `vendas`
+  ADD CONSTRAINT `vendas_ibfk_1` FOREIGN KEY (`id_venda_cliente`) REFERENCES `clientes` (`id_clietes`),
+  ADD CONSTRAINT `vendas_ibfk_2` FOREIGN KEY (`id_venda_colaborador`) REFERENCES `colaboradores` (`id_colaboradores`),
+  ADD CONSTRAINT `vendas_ibfk_3` FOREIGN KEY (`id_venda_danfe`) REFERENCES `danfe` (`id_danfe`),
+  ADD CONSTRAINT `vendas_ibfk_4` FOREIGN KEY (`id_venda_livro`) REFERENCES `livros` (`id_livros`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
