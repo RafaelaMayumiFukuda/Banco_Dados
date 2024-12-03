@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Tempo de geração: 08-Nov-2024 às 20:14
--- Versão do servidor: 10.4.27-MariaDB
--- versão do PHP: 8.0.25
+-- Tempo de geração: 03/12/2024 às 21:26
+-- Versão do servidor: 10.4.28-MariaDB
+-- Versão do PHP: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `marca`
+-- Estrutura para tabela `marca`
 --
 
 CREATE TABLE `marca` (
@@ -33,7 +33,7 @@ CREATE TABLE `marca` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Extraindo dados da tabela `marca`
+-- Despejando dados para a tabela `marca`
 --
 
 INSERT INTO `marca` (`id_marca`, `nome_marca`) VALUES
@@ -45,7 +45,7 @@ INSERT INTO `marca` (`id_marca`, `nome_marca`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `modelo`
+-- Estrutura para tabela `modelo`
 --
 
 CREATE TABLE `modelo` (
@@ -54,43 +54,67 @@ CREATE TABLE `modelo` (
   `nome_modelo` varchar(100) NOT NULL,
   `cor_modelo` varchar(50) DEFAULT NULL,
   `ano_modelo` year(4) DEFAULT NULL,
-  `placa_modelo` varchar(20) DEFAULT NULL
+  `placa_modelo` varchar(20) DEFAULT NULL,
+  `id_proprietario` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
--- Extraindo dados da tabela `modelo`
+-- Despejando dados para a tabela `modelo`
 --
 
-INSERT INTO `modelo` (`id_modelo`, `marca_id_marca`, `nome_modelo`, `cor_modelo`, `ano_modelo`, `placa_modelo`) VALUES
-(1, 1, 'Corolla', 'Prata', 2020, 'ABC-1234'),
-(2, 1, 'Hilux', 'Branco', 2021, 'XYZ-5678'),
-(3, 2, 'Fiesta', 'Preto', 2019, 'DEF-3456'),
-(4, 2, 'Ranger', 'Azul', 2022, 'HIJ-7890'),
-(5, 3, 'Onix', 'Vermelho', 2021, 'KLM-2345'),
-(6, 3, 'Tracker', 'Cinza', 2023, 'NOP-4567'),
-(7, 4, 'Civic', 'Preto', 2020, 'QRS-6789'),
-(8, 4, 'HR-V', 'Branco', 2022, 'TUV-8901');
+INSERT INTO `modelo` (`id_modelo`, `marca_id_marca`, `nome_modelo`, `cor_modelo`, `ano_modelo`, `placa_modelo`, `id_proprietario`) VALUES
+(1, 1, 'Corolla', 'Prata', '2020', 'ABC-1234', NULL),
+(2, 1, 'Hilux', 'Branco', '2021', 'XYZ-5678', NULL),
+(3, 2, 'Fiesta', 'Preto', '2019', 'DEF-3456', NULL),
+(4, 2, 'Ranger', 'Azul', '2022', 'HIJ-7890', NULL),
+(5, 3, 'Onix', 'Vermelho', '2021', 'KLM-2345', NULL),
+(6, 3, 'Tracker', 'Cinza', '2023', 'NOP-4567', NULL),
+(7, 4, 'Civic', 'Preto', '2020', 'QRS-6789', NULL),
+(8, 4, 'HR-V', 'Branco', '2022', 'TUV-8901', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Estrutura para tabela `proprietario`
+--
+
+CREATE TABLE `proprietario` (
+  `id_proprietario` int(11) NOT NULL,
+  `nome` varchar(50) NOT NULL,
+  `email` varchar(120) NOT NULL,
+  `telefone` varchar(11) NOT NULL,
+  `RG` varchar(20) NOT NULL,
+  `CPF` varchar(11) NOT NULL,
+  `CEP` int(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Índices para tabelas despejadas
 --
 
 --
--- Índices para tabela `marca`
+-- Índices de tabela `marca`
 --
 ALTER TABLE `marca`
   ADD PRIMARY KEY (`id_marca`);
 
 --
--- Índices para tabela `modelo`
+-- Índices de tabela `modelo`
 --
 ALTER TABLE `modelo`
   ADD PRIMARY KEY (`id_modelo`),
   ADD UNIQUE KEY `placa_modelo` (`placa_modelo`),
-  ADD KEY `marca_id_marca` (`marca_id_marca`);
+  ADD KEY `marca_id_marca` (`marca_id_marca`),
+  ADD KEY `id_proprietario` (`id_proprietario`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- Índices de tabela `proprietario`
+--
+ALTER TABLE `proprietario`
+  ADD PRIMARY KEY (`id_proprietario`);
+
+--
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
@@ -106,14 +130,21 @@ ALTER TABLE `modelo`
   MODIFY `id_modelo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
--- Restrições para despejos de tabelas
+-- AUTO_INCREMENT de tabela `proprietario`
+--
+ALTER TABLE `proprietario`
+  MODIFY `id_proprietario` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Restrições para tabelas despejadas
 --
 
 --
--- Limitadores para a tabela `modelo`
+-- Restrições para tabelas `modelo`
 --
 ALTER TABLE `modelo`
-  ADD CONSTRAINT `modelo_ibfk_1` FOREIGN KEY (`marca_id_marca`) REFERENCES `marca` (`id_marca`) ON DELETE CASCADE;
+  ADD CONSTRAINT `modelo_ibfk_1` FOREIGN KEY (`marca_id_marca`) REFERENCES `marca` (`id_marca`) ON DELETE CASCADE,
+  ADD CONSTRAINT `modelo_ibfk_2` FOREIGN KEY (`id_proprietario`) REFERENCES `proprietario` (`id_proprietario`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
